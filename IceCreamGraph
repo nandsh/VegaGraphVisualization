@@ -1,0 +1,340 @@
+{
+  "parameters": [
+    {
+      "signal": "RESO_LE",
+      "type": "range",
+      "min": 0,
+      "max": 10,
+      "value": 3
+    },
+    {
+      "signal": "TASTE",
+      "type": "radio",
+      "value": "similar",
+      "options": ["similar","dissimilar"]
+    },
+    {
+      "signal": "CONF_GE",
+      "type": "range",
+      "min": 0,
+      "max": 10,
+      "value": 7
+    },
+    {
+      "name": "Distance",
+      "signal": "linkDistance",
+      "type": "range",
+      "value": 70,
+      "min": 10,
+      "max": 200,
+      "rewrite": ["data[2].transform[0].linkDistance"]
+    },
+    {
+      "signal": "Interactive",
+      "type": "checkbox",
+      "value": true,
+      "rewrite": ["data[2].transform[0].interactive"]
+    }
+  ],
+  "spec": {
+    "width": 800,
+    "height": 500,
+    "padding": {"top": 25,"bottom": 0,"left": 0,"right": 0},
+    "signals": [
+      {
+        "name": "hover",
+        "init": null,
+        "streams": [
+          {"type": "symbol:mouseover","expr": "datum._id"},
+          {
+            "type": "window:mouseup, symbol:mouseout",
+            "expr": "null"
+          }
+        ]
+      },
+      {
+        "name": "title",
+        "init": "Hover for values",
+        "streams": [
+          {"type": "symbol:mouseover","expr": "datum.name"},
+          {
+            "type": "path:mouseover",
+            "expr": " 'RESO = ' + datum.reso + ' , ' + 'SCONF = ' + datum.sconflict + ' , ' + 'DCONF = ' + datum.dconflict "
+          },
+          {"type": "symbol:mouseout","expr": "null"},
+          {"type": "path:mouseout","expr": "null"}
+        ]
+      },
+      {
+        "name": "grab",
+        "init": null,
+        "streams": [
+          {
+            "type": "symbol:touchstart, symbol:mousedown",
+            "expr": "datum._id"
+          },
+          {
+            "type": "touchend, window:mouseup",
+            "expr": "null"
+          }
+        ]
+      },
+      {
+        "name": "active",
+        "init": null,
+        "streams": [
+          {
+            "type": "hover, grab",
+            "expr": "{id: grab || hover}"
+          },
+          {
+            "type": "symbol:touchmove, [symbol:mousedown, window:mouseup] > window:mousemove",
+            "expr": "{x: eventX(), y: eventY(), id: grab, update: true}"
+          }
+        ]
+      },
+      {
+        "name": "dblclick",
+        "init": null,
+        "verbose": true,
+        "streams": [{"type": "symbol:dblclick","expr": "datum._id"}]
+      },
+      {"name": "RESO_LE","init": 3},
+      {"name": "CONF_GE","init": 7},
+      {"name": "TASTE","init": "similar"}
+    ],
+    "predicates": [
+      {
+        "name": "isFixed",
+        "item": {"arg": "id"},
+        "type": "in",
+        "data": "fixed",
+        "field": "id"
+      }
+    ],
+    "data": [
+      {
+        "name": "fixed",
+        "modify": [
+          {
+            "type": "toggle",
+            "signal": "dblclick",
+            "field": "id"
+          }
+        ]
+      },
+      {
+        "name": "edges",
+        "values": [
+          {
+            "source": 0,
+            "target": 1,
+            "dconflict": 4,
+            "sconflict": 2,
+            "reso": 2
+          },
+          {
+            "source": 0,
+            "target": 2,
+            "dconflict": 3,
+            "sconflict": 4,
+            "reso": 2
+          },
+          {
+            "source": 0,
+            "target": 3,
+            "dconflict": 4,
+            "sconflict": 4,
+            "reso": 1
+          },
+          {
+            "source": 0,
+            "target": 4,
+            "dconflict": 2,
+            "sconflict": 1,
+            "reso": 1
+          },
+          {
+            "source": 0,
+            "target": 5,
+            "dconflict": 9,
+            "sconflict": 0,
+            "reso": 4
+          },
+          {
+            "source": 1,
+            "target": 2,
+            "dconflict": 0,
+            "sconflict": 7,
+            "reso": 0
+          },
+          {
+            "source": 1,
+            "target": 3,
+            "dconflict": 1,
+            "sconflict": 4,
+            "reso": 2
+          },
+          {
+            "source": 1,
+            "target": 4,
+            "dconflict": 1,
+            "sconflict": 7,
+            "reso": 11
+          },
+          {
+            "source": 1,
+            "target": 5,
+            "dconflict": 9,
+            "sconflict": 1,
+            "reso": 4
+          },
+          {
+            "source": 2,
+            "target": 3,
+            "dconflict": 2,
+            "sconflict": 1,
+            "reso": 1
+          },
+          {
+            "source": 2,
+            "target": 4,
+            "dconflict": 9,
+            "sconflict": 0,
+            "reso": 4
+          },
+          {
+            "source": 2,
+            "target": 5,
+            "dconflict": 0,
+            "sconflict": 7,
+            "reso": 0
+          },
+          {
+            "source": 3,
+            "target": 4,
+            "dconflict": 1,
+            "sconflict": 4,
+            "reso": 2
+          },
+          {
+            "source": 3,
+            "target": 5,
+            "dconflict": 1,
+            "sconflict": 7,
+            "reso": 11
+          },
+          {
+            "source": 4,
+            "target": 5,
+            "dconflict": 9,
+            "sconflict": 1,
+            "reso": 4
+          }
+        ],
+        "transform": [
+          {
+            "type": "filter",
+            "test": "((datum.reso <= RESO_LE) && (((TASTE === 'similar') && (datum.sconflict >= CONF_GE)) || ((TASTE === 'dissimilar') && (datum.dconflict >= CONF_GE))))"
+          }
+        ]
+      },
+      {
+        "name": "nodes",
+        "values": [
+          {"name": "Vanilla"},
+          {"name": "RainBow Sherbet"},
+          {"name": "Coffee"},
+          {"name": "CheeseCake"},
+          {"name": "Tender Coconut"},
+          {"name": "Roasted Almond"}
+        ],
+        "transform": [
+          {
+            "type": "force",
+            "size": [800,500],
+            "links": "edges",
+            "linkDistance": 30,
+            "linkStrength": 0.5,
+            "charge": -80,
+            "interactive": true,
+            "fixed": "fixed",
+            "active": {"signal": "active"}
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "type": "path",
+        "from": {
+          "data": "edges",
+          "transform": [
+            {
+              "type": "lookup",
+              "on": "nodes",
+              "keys": ["source","target"],
+              "as": ["_source","_target"]
+            },
+            {"type": "linkpath","shape": "line"}
+          ]
+        },
+        "properties": {
+          "update": {
+            "path": {"field": "layout_path"},
+            "stroke": {"value": "#ccc"},
+            "strokeWidth": {"value": 3.5}
+          },
+          "hover": {
+            "stroke": {"value": "#ff0000"},
+            "strokeWidth": {"value": 7.5}
+          }
+        }
+      },
+      {
+        "type": "symbol",
+        "from": {"data": "nodes"},
+        "properties": {
+          "enter": {
+            "size": {"value": 150},
+            "shape": {"value": "circle"}
+          },
+          "update": {
+            "x": {"field": "layout_x"},
+            "y": {"field": "layout_y"},
+            "fill": {"value": "steelblue"},
+            "fillOpacity": {"value": 1},
+            "stroke": {
+              "rule": [
+                {
+                  "predicate": {"name": "isFixed","id": {"field": "_id"}},
+                  "value": "firebrick"
+                },
+                {"value": "steelblue"}
+              ]
+            }
+          },
+          "hover": {
+            "fill": {"value": "red"},
+            "fillOpacity": {"value": 1.7}
+          }
+        }
+      },
+      {
+        "type": "text",
+        "interactive": false,
+        "properties": {
+          "enter": {
+            "x": {"value": 80},
+            "y": {"value": 20},
+            "fill": {"value": "steelblue"},
+            "font": {"value": "consolas"},
+            "fontSize": {"value": 16},
+            "align": {"value": "left"}
+          },
+          "update": {"text": {"signal": "title"}}
+        }
+      }
+    ]
+  }
+}
